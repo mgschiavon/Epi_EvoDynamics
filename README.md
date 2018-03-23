@@ -5,6 +5,7 @@ To simulate the evolutionary dynamics of a self-regulated gene as described in [
 - `EvoDynamics.cpp` : Main instructions
 - `GeneNetwork.h`   : Library
 - `ran1.h`          : Random number generator
+
 All of them in C++ language. The "Minimal random number generator of Park and Miller with Bays-Durham shuffle and added safeguards" from Numerical Recipes in C++ [1] was used to generate random numbers. A negative integer is required to initialize (i.e. *seed*).
 
 [1] *Press, W. H., Teukolsky, S. A., and Vetterling, W. T. (2002), Numerical recipes in C++: the art of scientific computing, Cambridge University Press.*
@@ -13,9 +14,14 @@ The code `EvoDynamics.cpp` simulates the evolution of a population with the gene
 
 ## Running instructions
 1. Compile `EvoDynamics.cpp` in the presence of the other two files, for example:
-    `g++ EvoDynamics.cpp -o ED_run.out`
+```
+g++ EvoDynamics.cpp -o ED_run.out
+```
+
 2. Run with the input arguments: population size (`N`), environmental fluctuation frequency (`nu`), selection pressure (i.e. tournament size, `sT`), mutation rate (`u`), mutation step size (`M`), algorithm to use (`0`, if *deterministic*; `1`, if *stochastic*), and the initial genotype (`k0`; `nH0`; `KD0`). For example:
-    `./ED_run.out 1000 0.1 6 0.03 1.1 1 80 6 45`
+```
+./ED_run.out 1000 0.1 6 0.03 1.1 1 80 6 45
+```
 
 In addition of the input arguments, other simulation parameters can be easily modified by the user in the `EvoDynamics.cpp` file:
 - `TMAX`: Maximum time to simulate each cell during one generation (e.g. `4`).
@@ -34,7 +40,10 @@ In addition of the input arguments, other simulation parameters can be easily mo
 - `numRep` : Total number of replicas to run (e.g. `10`).
 - `seeds[10]` : Seeds for the random number generator (e.g. `{-17, -23, -7, -3, -5, -9, -11, -13, -15, -19}`).
 
+### Output files
+
 The output files for each replica are:
+
 - Average genotype & subpopulations: File `AGS` with columns (printed each generation):
   - Generation *g*
   - Environment *E* (`0` if *HIGH*; `1` if *LOW*)
@@ -49,6 +58,7 @@ The output files for each replica are:
   - *<K<sub>D</sub>><sub>M</sub>*
   - *\<A><sub>M</sub>*
   - *\<w><sub>M</sub>*
+
 NOTE: *B* and *M* subindexes stand for *bistable* and *monostable* subpopulations, respectively.
    
 - Adaptation strategy per cycle: File `ASC` with columns (printed at the end of each environmental cycle):
@@ -57,6 +67,7 @@ NOTE: *B* and *M* subindexes stand for *bistable* and *monostable* subpopulation
   - IE
   - BA
   - GA
+
 NOTE: *PE* corresponds to the fraction of parental lineages with completely bistable lineages and no mutations; *IE* corresponds to the fraction of parental lineages with completely bistable lineages and exactly one mutation; *BA* corresponds to the fraction of parental lineages with completely bistable lineages and 2 or more mutations; and *GA* correspond to the fraction of parental lineages with some monostable genotypes and 2 or more mutations.
     
 - Lineage information per cycle: File `LxC` with columns (printed at the end of the last `Cp` environmental cycles):
@@ -71,6 +82,7 @@ NOTE: *PE* corresponds to the fraction of parental lineages with completely bist
   - *k<sup>(L)</sup>*
   - *n<sub>H</sub><sup>(L)</sup>*
   - *K<sub>D</sub><sup>(L)</sup>*
+
 NOTE: *x<sup>(H)</sup>*, *k<sup>(L)</sup>* correspond to the biophysical parameter *x* at the end of the *HIGH* and *LOW* epochs, respectively. Notice that these are not parental lineages, but simply the lineages of the current cycle.
     
 - Individuals information per epoch (first 9 \& last generations): File `LxC` with columns (printed at the end of the last `Ep` epochs):
@@ -86,6 +98,7 @@ NOTE: *x<sup>(H)</sup>*, *k<sup>(L)</sup>* correspond to the biophysical paramet
   - SS2
   - SS3
   - Parent tag
+
 NOTE: SS\# correspond to the phenotype steady state values given the cell's genotype (if the cell is monostable, SS2 = SS3 = 0). The cell tag simply corresponds to the numbered population, from 0 to N-1, and parent tag tells you the corresponding cell tag of the parental cell in the previous generation.
 
 In all cases, columns are separated by tabs.
