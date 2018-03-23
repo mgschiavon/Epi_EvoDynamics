@@ -1,5 +1,7 @@
+[![](https://img.shields.io/badge/DOI-10.1101%2F072199-blue.svg)](https://doi.org/10.1101/072199)
+
 # Epi_EvoDynamics
-Evolutionary dynamics of an epigenetic switch in a fluctuating environment
+**Evolutionary dynamics of an epigenetic switch in a fluctuating environment**
 
 To simulate the evolutionary dynamics of a self-regulated gene as described in [Gómez-Schiavon & Buchler](https://doi.org/10.1101/072199), three main files are required:
 - `EvoDynamics.cpp` : Main instructions
