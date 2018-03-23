@@ -103,6 +103,43 @@ NOTE: SS\# correspond to the phenotype steady state values given the cell's geno
 
 In all cases, columns are separated by tabs.
 
+### Alternative assumptions
+
+Substitute main instructions file (`EvoDynamics.cpp`) and/or library accordingly (`GeneNetwork.h`):
+
+#### Alternative selection schemes:
+- `EvoDynamics_ALT_SS_Trunc.cpp` : Main instructions for Truncation selection
+- `EvoDynamics_ALT_SS_Prop.cpp` : Main instructions for Proportional selection
+- `EvoDynamics_ALT_SS_Weight.cpp` : Main instructions for Weighted selection
+- `GeneNetwork_ALT_SS.h` : Library for all alternative selection schemes
+
+#### Random environment fluctuations:
+- `EvoDynamics_ALT_RandEnv.cpp` : Main instructions
+
+#### Moran model:
+- `EvoDynamics_ALT_MoranM.cpp` : Main instructions
+- `GeneNetwork_ALT_MoranM.h` : Library
+
+#### Alternative fitness functions:
+- `EvoDynamics_ALT_WFunct_Normal.cpp` : Normal Fitness function
+- `EvoDynamics_ALT_WFunct_Step.cpp` : Step-like Fitness function
+- `GeneNetwork_ALT_WFunct.h` : Library
+
+#### Average A as phenotype:
+- `EvoDynamics_ALT_Phen_AP.cpp` : Main instructions
+- `GeneNetwork_ALT_Phen_AP.h` : Library
+
+#### Protein distribution as phenotype:
+- `EvoDynamics_ALT_Phen_PD.cpp` : Main instructions
+- `GeneNetwork_ALT_Phen_PD.h` : Library
+
+#### "Cube" mutation:
+- `EvoDynamics_ALT_C3Mut.cpp` : Main instructions
+- `GeneNetwork_ALT_C3Mut.h` : Library
+
+#### Basal activity (alpha) evolving:
+- `EvoDynamics_aEvo.cpp` : Main instructions
+- `GeneNetwork_aEvo.h` : Library
 
 ## Referencing
 
