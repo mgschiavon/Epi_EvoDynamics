@@ -1,3 +1,9 @@
+// nextflow pipeline for ED_run.out
+// </PATH/TO/>nextflow run </PATH/TO/>ED_run.nf --parameters <myparams_file>
+//                                      --njonbs <#jobs> --outdir <output_dir>
+//                                      -with-trace -with-timeline -with-report &> log &
+
+// Command line options
 params.parameters = ''
 params.njobs = 10
 params.outdir = 'output'
@@ -6,14 +12,12 @@ params.outdir = 'output'
 parameters = file(params.parameters)
 
 // Read parameters
-// PARAMS = Channel.fromPath(paramters).
-//     splitCsv(header:false).
-//     map{row -> tuple(row[0], row[1], row[2])}
 PARAMS = parameters.readLines()
 
 process ED{
-    publishDir params.output
+    publishDir params.outdir
     maxForks params.njobs
+    errorStrategy 'ignore'
 
     input:
     val params from PARAMS
