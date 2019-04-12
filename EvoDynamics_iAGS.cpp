@@ -72,7 +72,7 @@ int main(int argn, char *args[])
 
 	if (argn < 11)
 	{
-		cerr << "Error! Input nine arguments: N; nu; sT; u; M; Algorithm: (0) Deterministic, (1) Gillespie; k0; nH0; KD0; seed index (0 to 9)." << endl;
+		cerr << "Error! Input ten arguments: N; nu; sT; u; M; Algorithm: (0) Deterministic, (1) Gillespie; k0; nH0; KD0; seed index (0 to 9)." << endl;
 		exit(0);
 	}
 
