@@ -65,8 +65,7 @@ int main(int argn, char *args[])
 	// Optimal protein number:
 	double AOPT[2] = {80,20}; 	// {E_High,E_Low}
 	double V = 0.2;			// Width measure for Lorentzian fitness function.
-	// Replicas:
-	//int numRep = 10;		// Total number of replicas to run.
+	// Replicas' seeds:
 	long seeds[10] = {-17,-23,-7,-3,-5,-9,-11,-13,-15,-19};	// Seeds for the random number generator.
 	///////////////////////////////////////////////////////////////////////////////////////
 
