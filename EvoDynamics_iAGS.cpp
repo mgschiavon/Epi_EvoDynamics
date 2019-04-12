@@ -28,12 +28,9 @@
 // cloned in the next generations are selected applying the tournament selection
 // scheme, with a probability u of randomly mutate each of its parameter values.
 // Every generation, the average genotype & subpopulations is printed in the AGS
-// output file; every cycle, the adaptation strategy per cycle is printed in the
-// ASC output file; and the lineage information per cycle is printed only in the
-// last Cp cycles in theis printed in the LxC output file; and finally, the
-// individuals information per epoch for the first nine generation after each
-// environmental change and the last generation of each epoch is printed for
-// the last Ep epochs is printed in the IxE output file.
+// output file.
+// NOTE: A variant from EvoDynamics.cpp that prints only AGS file and the seed 
+//       index needs to be specified as input by the user (from 0 to 9).
 
 // Libraries:
 #include <iostream>
@@ -69,13 +66,13 @@ int main(int argn, char *args[])
 	double AOPT[2] = {80,20}; 	// {E_High,E_Low}
 	double V = 0.2;			// Width measure for Lorentzian fitness function.
 	// Replicas:
-	int numRep = 10;		// Total number of replicas to run.
+	//int numRep = 10;		// Total number of replicas to run.
 	long seeds[10] = {-17,-23,-7,-3,-5,-9,-11,-13,-15,-19};	// Seeds for the random number generator.
 	///////////////////////////////////////////////////////////////////////////////////////
 
-	if (argn < 10)
+	if (argn < 11)
 	{
-		cerr << "Error! Input nine arguments: N; nu; sT; u; M; Algorithm: (0) Deterministic, (1) Gillespie; k0; nH0; KD0." << endl;
+		cerr << "Error! Input nine arguments: N; nu; sT; u; M; Algorithm: (0) Deterministic, (1) Gillespie; k0; nH0; KD0; seed index (0 to 9)." << endl;
 		exit(0);
 	}
 
@@ -89,9 +86,8 @@ int main(int argn, char *args[])
 	double k0 = atof(args[7]);	// Initial value for the maximum synthesis rate (k).
 	double nH0 = atof(args[8]);	// Initial value for the Hill coefficient (nH).
 	double KD0 = atof(args[9]);	// Initial value for the affinity constant (KD).
+	int iS = atof(args[10]);	// Replica index (i.e. value from seeds[] to use to generate random numbers).
 
-	for(int iS=0; iS<numRep; iS++)
-	{
 		// OUTPUT FILES
 		char myFileName[255];
 		// Average genotype & subpopulations:
@@ -102,29 +98,6 @@ int main(int argn, char *args[])
 		AGS << "<A>_B" << '\t' << "<w>_B" << '\t';
 		AGS << "<k>_M" << '\t' << "<nH>_M" << '\t' << "<KD>_M" << '\t';
 		AGS << "<A>_M" << '\t' << "<w>_M" << endl;
-		// Adaptation strategy x cycle:
-		sprintf(myFileName,"ASC_N%d_nu%1.4f_s%d_u%1.3f_M%1.2f_a%d_k%1.3f_nH%1.2f_KD%1.2f_%d.dat",N,nu,sT,u,M,alg,k0,nH0,KD0,iS);
-		ofstream ASC(myFileName,ios::out);
-		ASC << "Generation" << '\t';
-		ASC << "PE" << '\t';
-		ASC << "IE" << '\t';
-		ASC << "BA" << '\t';
-		ASC << "GA" << endl;
-		// Lineage information x cycle:
-		sprintf(myFileName,"LxC_N%d_nu%1.4f_s%d_u%1.3f_M%1.2f_a%d_k%1.3f_nH%1.2f_KD%1.2f_%d.dat",N,nu,sT,u,M,alg,k0,nH0,KD0,iS);
-		ofstream LxC(myFileName,ios::out);
-		LxC << "Generation" << '\t';
-		LxC << "LTag" << '\t' << "LMut" << '\t' << "LBis" << '\t' << "LFit" << '\t';
-		LxC << "k_H" << '\t' << "nH_H" << '\t' << "KD_H" << '\t';
-		LxC << "k_L" << '\t' << "nH_L" << '\t' << "KD_L" << endl;
-		// Individuals information per epoch (first 9 & last generations):
-		sprintf(myFileName,"IxE_N%d_nu%1.4f_s%d_u%1.3f_M%1.2f_a%d_k%1.3f_nH%1.2f_KD%1.2f_%d.dat",N,nu,sT,u,M,alg,k0,nH0,KD0,iS);
-		ofstream IxE(myFileName,ios::out);
-		IxE << "Generation" << '\t' << "Environment" << '\t' << "Cell tag" << '\t';
-		IxE << "k" << '\t' << "nH" << '\t' << "KD" << '\t';
-		IxE << "A" << '\t' << "w" << '\t';
-		IxE << "SS1" << '\t' << "SS2" << '\t' << "SS3" << '\t';
-		IxE << "Parent tag" << endl;
 
 		long seed = seeds[iS];	// Initialize random seed.
 		int E = 1 - E0;			// Initialize environment.
@@ -212,16 +185,6 @@ int main(int argn, char *args[])
 					myPopB.w += myPop[i].w;
 					myPopB.f++;
 				}
-
-				// PRINTING - Individuals information per epoch (first 9 & last generations):
-				if((iG>(GMAX-(Ep/nu))) && (iG%int(1/nu)<10))
-				{
-					IxE << iG << '\t' << E << '\t' << i << '\t';
-					IxE << myPop[i].k << '\t' << myPop[i].nH << '\t' << myPop[i].KD << '\t';
-					IxE << myPop[i].A << '\t' << myPop[i].w << '\t';
-					IxE << myPop[i].SS[0] << '\t' << myPop[i].SS[1] << '\t' << myPop[i].SS[2] << '\t';
-					IxE << myPop[i].parent << endl;
-				}
 			}
 
 			// PRINTING - Average genotype & subpopulations:
@@ -254,26 +217,12 @@ int main(int argn, char *args[])
 					myPop[i].adaptS();
 					AS[myPop[i].ASp]++;
 
-					if(iG>(GMAX-(Cp*2/nu)))
-					{
-						// PRINTING - Lineage information x cycle:
-						LxC << iG << '\t';
-						LxC << myPop[i].LTag << '\t' << myPop[i].LMut << '\t' << myPop[i].LBis << '\t' << myPop[i].LFit << '\t';
-						LxC << myPop[i].kE[0] << '\t' << myPop[i].nHE[0] << '\t' << myPop[i].KDE[0] << '\t';
-						LxC << myPop[i].kE[1] << '\t' << myPop[i].nHE[1] << '\t' << myPop[i].KDE[1] << endl;
-					}
 					// Reset lineage's statistics:
 					myPop[i].LMut = 0;
 					myPop[i].LBis = 1;
 					myPop[i].LFit = 0;
 					myPop[i].LTag = i;
 				}
-				// PRINTING - Adaptation strategy x cycle:
-				ASC << iG << '\t';
-				ASC << AS[1]/N << '\t';
-				ASC << AS[2]/N << '\t';
-				ASC << AS[3]/N << '\t';
-				ASC << AS[4]/N << endl;
 			}
 
 			// Apply selection and evolve parameters:
@@ -282,9 +231,6 @@ int main(int argn, char *args[])
 
 		// Close files
 		AGS.close();
-		ASC.close();
-		LxC.close();
-		IxE.close();
-	}
+
 	return 0;
 }
