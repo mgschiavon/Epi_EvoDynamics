@@ -47,7 +47,7 @@ int main(int argn, char *args[])
 	///////////////////////////////////////////////////////////////////////////////////////
 	// Simulation constants:
 	#define TMAX 4			// Maximum time to simulate each cell during one generation.
-	int GMAX = 1000;		// Number of generations to simulate.
+	int GMAX = 10000;		// Number of generations to simulate.
 	int Cp = 100;			// Number of cycles to print full lineages' information.
 	int Ep = 10;			// Number of epoch to print full individuals' information (only first 9 & last generation per epoch).
 	// Initial protein concentration:
