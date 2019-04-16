@@ -29,7 +29,7 @@
 // scheme, with a probability u of randomly mutate its parameter values. 
 // Every generation, the average genotype & subpopulations is printed in the AGS 
 // output file.
-// NOTE: A variant from EvoDynamics_ALT_WFunct_Normal.cpp that prints only AGS file 
+// NOTE: A variant from EvoDynamics_ALT_Phen_AP.cpp that prints only AGS file 
 //       and the seed index needs to be specified as input by the user (from 0 to 9).
 
 // Libraries:
