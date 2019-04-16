@@ -229,6 +229,7 @@ int main(int argn, char *args[])
 		}
 		
 		// Close files
+		AGS.close();
 
 	return 0;
 }
