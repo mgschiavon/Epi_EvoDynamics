@@ -98,8 +98,6 @@ int main(int argn, char *args[])
 	
 	double rLE = N/tLIFE;		// Rate of life events.
 		
-	for(int iS=0; iS<numRep; iS++)
-	{
 		// OUTPUT FILES
 		char myFileName[255];
 		// Average genotype & subpopulations:
@@ -307,6 +305,6 @@ int main(int argn, char *args[])
 		ASC.close();
 		LxC.close();
 		IxE.close();
-	}
+	
 	return 0;
 }
