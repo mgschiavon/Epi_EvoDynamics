@@ -197,13 +197,13 @@ class GeneNetwork
 	void mutate(long *seed, double M, parE PAR_E)
 	{
 		#define PI 3.14159265
-		double ratioQ = (double)ran1(seed);			// Random number between 0 and 1
-		double thetaQ = (double)ran1(seed)*2*PI;	// Random number between 0 and 2*PI
-		double phiQ = (double)ran1(seed)*2*PI;		// Random number between 0 and 2*PI
+		double rQ = (double)ran1(seed);			// Random number between 0 and 1
+		double uQ = ((double)ran1(seed)*2) - 1;	// Random number between -1 and 1
+		double tQ = (double)ran1(seed)*2*PI;	// Random number between 0 and 2*PI
 		
 		if(PAR_E.k)
 		{
-			k *= pow(M,ratioQ*sin(thetaQ)*cos(phiQ));
+			k *= pow(M,rQ*sqrt(1-pow(uQ,2))*cos(tQ));
 			if(k>1000)				// Defines an upper limit for the parameter value
 			{
 				k=1000;
@@ -215,7 +215,7 @@ class GeneNetwork
 		}
 		if(PAR_E.nH)
 		{
-			nH *= pow(M,ratioQ*sin(thetaQ)*sin(phiQ));
+			nH *= pow(M,rQ*sqrt(1-pow(uQ,2))*sin(tQ));
 			if(nH>16)			// Defines an upper limit for the parameter value
 			{
 				nH=16;
@@ -227,7 +227,7 @@ class GeneNetwork
 		}
 		if(PAR_E.KD)
 		{
-			KD *= pow(M,ratioQ*cos(thetaQ));
+			KD *= pow(M,rQ*uQ);
 			if(KD>120)			// Defines an upper limit for the parameter value
 			{
 				KD = 120;
