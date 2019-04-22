@@ -4,6 +4,7 @@
 //
 // Created by Mariana Gómez-Schiavon
 // December 2015
+// Modified April 2019
 //
 
 // This code simulates the evolution of a population with the gene network 
@@ -33,6 +34,9 @@
 // individuals information per epoch for the first nine generation after each 
 // environmental change and the last generation of each epoch is printed for 
 // the last Ep epochs is printed in the IxE output file.
+// NOTE: A variant from EvoDynamics_ALT_SS_Weight.cpp where the seed index needs 
+//       to be specified as input by the user (from 0 to 9).
+
 
 // Libraries:
 #include <iostream>
@@ -50,8 +54,8 @@ int main(int argn, char *args[])
 	// Simulation constants:
 	#define TMAX 4			// Maximum time to simulate each cell during one generation.
 	int GMAX = 10000;		// Number of generations to simulate.
-	int Cp = 100;			// Number of cycles to print full lineages' information.
-	int Ep = 10;			// Number of epoch to print full individuals' information (only first 9 & last generation per epoch).
+	int Cp = 0;			// Number of cycles to print full lineages' information.
+	int Ep = 0;			// Number of epoch to print full individuals' information (only first 9 & last generation per epoch).
 	// Initial protein concentration:
 	int A0 = 80;
 	// Initial environmental state:
@@ -67,14 +71,13 @@ int main(int argn, char *args[])
 	// Optimal protein number:
 	double AOPT[2] = {80,20}; 	// {E_High,E_Low}
 	double V = 0.2;			// Width measure for Lorentzian fitness function.
-	// Replicas:
-	int numRep = 3;			// Total number of replicas to run.
-	long seeds[3] = {-17,-23,-7};	// Seeds for the random number generator.
+	// Replicas' seeds:
+	long seeds[10] = {-17,-23,-7,-3,-5,-9,-11,-13,-15,-19};	// Seeds for the random number generator.
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	if (argn < 10)
+	if (argn < 11)
 	{
-		cerr << "Error! Input nine arguments: N; nu; sT = 0; u; M; Algorithm: (0) Deterministic, (1) Gillespie; k0; nH0; KD0." << endl;
+		cerr << "Error! Input nine arguments: N; nu; sT = 0; u; M; Algorithm: (0) Deterministic, (1) Gillespie; k0; nH0; KD0; seed index (0 to 9)." << endl;
 		exit(0);
 	}
 		
@@ -88,9 +91,8 @@ int main(int argn, char *args[])
 	double k0 = atof(args[7]);	// Initial value for the maximum synthesis rate (k).
 	double nH0 = atof(args[8]);	// Initial value for the Hill coefficient (nH).
 	double KD0 = atof(args[9]);	// Initial value for the affinity constant (KD).
+	int iS = atof(args[10]);	// Replica index (i.e. value from seeds[] to use to generate random numbers).
 	
-	for(int iS=0; iS<numRep; iS++)
-	{
 		// OUTPUT FILES
 		char myFileName[255];
 		// Average genotype & subpopulations:
@@ -284,6 +286,6 @@ int main(int argn, char *args[])
 		ASC.close();
 		LxC.close();
 		IxE.close();
-	}
+	
 	return 0;
 }
