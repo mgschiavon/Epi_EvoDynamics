@@ -152,6 +152,7 @@ class GeneNetwork
 			// Make the actual value the previous value and iterate:
 			FA0 = FA;
 		}
+		mut = 0;		// Reset flag for parental genotype.
 	}
 
 	// Update reaction propensities:
@@ -313,7 +314,6 @@ void selectionTournamentMM(GeneNetwork *myPop, int N, int t, double u, double M,
 	myPop[j] = myPop[maxT];
 	myPop[j].parent = maxT;	// Parent cell number
 	// Allow random mutation:
-	myPop[j].mut = 0;		// Flag for parental genotype.
 	if ((double)ran1(seed) <= u)
 	{
 		myPop[j].mutate(seed, M, PAR_E);
