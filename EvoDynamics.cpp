@@ -6,32 +6,32 @@
 // October 2015
 //
 
-// This code simulates the evolution of a population with the gene network 
-// defined in the GeneNetwork class (see GeneNetwork.h). The population size 
-// (N), environmental fluctuation frequency (nu), selection pressure (sT), 
-// mutation frequency (u), mutation step size (M), gene expression dynamics' 
-// algorithm (alg: 0, Deterministic; 1, Gillespie), as well as the initial 
-// genotype (k0; nH0; KD0) are input arguments defined by the user. The 
-// simulation runs for GMAX generations, and the gene expression dynamics for 
-// each individual cell are simulated for TMAX time, which corresponds to its 
-// life span. The same initial protein number (A0) is assumed for all cells in 
-// the population. Some parameters in the gene network model are assumed to be 
-// fixed: the basal synthesis activity (ALPHA) and the protein degradation rate 
-// (DEG). From the three parameters that define the cell's genotype (k; nH; KD), 
-// which ones would actually allow to evolve is determined by the parE class 
-// (PAR_E). The environment fluctuates with a fixed frequency (nu) between two 
-// states (0, High; 1, Low), and the initial environmental state is defined by 
-// E0. Each environment is characterized by an optimal protein number (AOPT); 
-// and the fitness in each environment is calculated using a Lorentzian function 
-// centered in the optimal protein number and a width measure V. The cells to be 
-// cloned in the next generations are selected applying the tournament selection 
-// scheme, with a probability u of randomly mutate each of its parameter values. 
-// Every generation, the average genotype & subpopulations is printed in the AGS 
-// output file; every cycle, the adaptation strategy per cycle is printed in the 
-// ASC output file; and the lineage information per cycle is printed only in the 
-// last Cp cycles in theis printed in the LxC output file; and finally, the 
-// individuals information per epoch for the first nine generation after each 
-// environmental change and the last generation of each epoch is printed for 
+// This code simulates the evolution of a population with the gene network
+// defined in the GeneNetwork class (see GeneNetwork.h). The population size
+// (N), environmental fluctuation frequency (nu), selection pressure (sT),
+// mutation frequency (u), mutation step size (M), gene expression dynamics'
+// algorithm (alg: 0, Deterministic; 1, Gillespie), as well as the initial
+// genotype (k0; nH0; KD0) are input arguments defined by the user. The
+// simulation runs for GMAX generations, and the gene expression dynamics for
+// each individual cell are simulated for TMAX time, which corresponds to its
+// life span. The same initial protein number (A0) is assumed for all cells in
+// the population. Some parameters in the gene network model are assumed to be
+// fixed: the basal synthesis activity (ALPHA) and the protein degradation rate
+// (DEG). From the three parameters that define the cell's genotype (k; nH; KD),
+// which ones would actually allow to evolve is determined by the parE class
+// (PAR_E). The environment fluctuates with a fixed frequency (nu) between two
+// states (0, High; 1, Low), and the initial environmental state is defined by
+// E0. Each environment is characterized by an optimal protein number (AOPT);
+// and the fitness in each environment is calculated using a Lorentzian function
+// centered in the optimal protein number and a width measure V. The cells to be
+// cloned in the next generations are selected applying the tournament selection
+// scheme, with a probability u of randomly mutate each of its parameter values.
+// Every generation, the average genotype & subpopulations is printed in the AGS
+// output file; every cycle, the adaptation strategy per cycle is printed in the
+// ASC output file; and the lineage information per cycle is printed only in the
+// last Cp cycles in theis printed in the LxC output file; and finally, the
+// individuals information per epoch for the first nine generation after each
+// environmental change and the last generation of each epoch is printed for
 // the last Ep epochs is printed in the IxE output file.
 
 // Libraries:
@@ -71,13 +71,13 @@ int main(int argn, char *args[])
 	int numRep = 10;		// Total number of replicas to run.
 	long seeds[10] = {-17,-23,-7,-3,-5,-9,-11,-13,-15,-19};	// Seeds for the random number generator.
 	///////////////////////////////////////////////////////////////////////////////////////
-	
+
 	if (argn < 10)
 	{
 		cerr << "Error! Input nine arguments: N; nu; sT; u; M; Algorithm: (0) Deterministic, (1) Gillespie; k0; nH0; KD0." << endl;
 		exit(0);
 	}
-		
+
 	// Input arguments
 	int N = atoi(args[1]);		// Number of cells in the population.
 	double nu = atof(args[2]);	// Frequency of environment switching.
@@ -88,7 +88,7 @@ int main(int argn, char *args[])
 	double k0 = atof(args[7]);	// Initial value for the maximum synthesis rate (k).
 	double nH0 = atof(args[8]);	// Initial value for the Hill coefficient (nH).
 	double KD0 = atof(args[9]);	// Initial value for the affinity constant (KD).
-		
+
 	for(int iS=0; iS<numRep; iS++)
 	{
 		// OUTPUT FILES
@@ -124,15 +124,15 @@ int main(int argn, char *args[])
 		IxE << "A" << '\t' << "w" << '\t';
 		IxE << "SS1" << '\t' << "SS2" << '\t' << "SS3" << '\t';
 		IxE << "Parent tag" << endl;
-			
+
 		long seed = seeds[iS];	// Initialize random seed.
 		int E = 1 - E0;			// Initialize environment.
-		
+
 		// Create the cell population:
 		GeneNetwork myPop[N];
 		PopAverage myPopB;
 		PopAverage myPopM;
-	
+
 		// Assign user-defined-parameters values:
 		myPop[0].ic(A0,k0,ALPHA,nH0,KD0,DEG);
 		myPop[0].LTag = 0;
@@ -141,7 +141,7 @@ int main(int argn, char *args[])
 			myPop[i] = myPop[0];
 			myPop[i].LTag = i;
 		}
-		
+
 		// Simulate generations:
 		for (int iG=1; iG<=GMAX; iG++)
 		{
@@ -150,10 +150,10 @@ int main(int argn, char *args[])
 			{
 				E = (E+1)%2;
 			}
-			
+
 			myPopB.reset();
 			myPopM.reset();
-			
+
 			// Loop over the population:
 			for (int i = 0; i<N; i++)
 			{
@@ -162,7 +162,7 @@ int main(int argn, char *args[])
 				{
 					myPop[i].findSS();
 				}
-				
+
 				// Gillespie Algorithm:
 				if (alg)
 				{
@@ -185,11 +185,11 @@ int main(int argn, char *args[])
 						myPop[i].A = myPop[i].SS[0];
 					}
 				}
-				
+
 				// Calculate the fitness of cell [i]:
 				myPop[i].calculateFitness(E, AOPT, V);
 				myPop[i].LFit += (myPop[i].w*(nu/2));
-				
+
 				// MONOSTABLE
 				if(myPop[i].SS[2] == 0)
 				{
@@ -211,7 +211,7 @@ int main(int argn, char *args[])
 					myPopB.w += myPop[i].w;
 					myPopB.f++;
 				}
-				
+
 				// PRINTING - Individuals information per epoch (first 9 & last generations):
 				if((iG>(GMAX-(Ep/nu))) && (iG%int(1/nu)<10))
 				{
@@ -222,7 +222,7 @@ int main(int argn, char *args[])
 					IxE << myPop[i].parent << endl;
 				}
 			}
-			
+
 			// PRINTING - Average genotype & subpopulations:
 			myPopB.normalize(N);
 			myPopM.normalize(N);
@@ -231,7 +231,7 @@ int main(int argn, char *args[])
 			AGS << myPopB.A << '\t' << myPopB.w << '\t';
 			AGS << myPopM.k << '\t' << myPopM.nH << '\t' << myPopM.KD << '\t';
 			AGS << myPopM.A << '\t' << myPopM.w << endl;
-			
+
 			// Each epoch, record genotype per lineage:
 			if(iG%int(1/nu)==0)
 			{
@@ -242,8 +242,8 @@ int main(int argn, char *args[])
 					myPop[i].KDE[E] = myPop[i].KD;
 				}
 			}
-				
-				
+
+
 			// Each cycle:
 			if(iG%int(2/nu)==0)
 			{
@@ -252,7 +252,7 @@ int main(int argn, char *args[])
 				{
 					myPop[i].adaptS();
 					AS[myPop[i].ASp]++;
-					
+
 					if(iG>(GMAX-(Cp*2/nu)))
 					{
 						// PRINTING - Lineage information x cycle:
@@ -274,11 +274,11 @@ int main(int argn, char *args[])
 				ASC << AS[3]/N << '\t';
 				ASC << AS[4]/N << endl;
 			}
-			
+
 			// Apply selection and evolve parameters:
 			selectionTournament(myPop, N, sT, u, M, &seed, PAR_E);
 		}
-		
+
 		// Close files
 		AGS.close();
 		ASC.close();
