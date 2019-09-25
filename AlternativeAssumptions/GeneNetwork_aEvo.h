@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <vector>
 #include "ran1.h"
+#include "gasdev.h"
 
 using namespace std;
 
@@ -202,15 +203,17 @@ class GeneNetwork
 	// Random mutation in the genotype:
 	void mutate(long *seed, double M, parE PAR_E)
 	{
-		#define PI 3.14159265
-		double ratioQ = (double)ran1(seed);		// Random number between 0 and 1
-		double phi1Q = (double)ran1(seed)*2*PI;		// Random number between 0 and 2*PI
-		double phi2Q = (double)ran1(seed)*2*PI;		// Random number between 0 and 2*PI
-		double phi3Q = (double)ran1(seed)*2*PI;		// Random number between 0 and 2*PI
+		double rQ = (double)ran1(seed);			// Random number between 0 and 1
+		double xQ = (double)gasdev(seed);		// Normal random number (~N(0,1))
+		double yQ = (double)gasdev(seed);		// Normal random number (~N(0,1))
+		double zQ = (double)gasdev(seed);		// Normal random number (~N(0,1))
+		double wQ = (double)gasdev(seed);		// Normal random number (~N(0,1))
+		double nQ = rQ/sqrt(pow(xQ,2)+pow(yQ,2)+pow(zQ,2)+pow(wQ,2));
+		// See Weisstein, Eric W. "Hypersphere Point Picking." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/HyperspherePointPicking.html
 		
 		if(PAR_E.k)
 		{
-			k *= pow(M,ratioQ*cos(phi1Q));
+			k *= pow(M,nQ*xQ);
 			if(k>1000)				// Defines an upper limit for the parameter value
 			{
 				k=1000;
@@ -222,7 +225,7 @@ class GeneNetwork
 		}
 		if(PAR_E.nH)
 		{
-			nH *= pow(M,ratioQ*sin(phi1Q)*cos(phi2Q));
+			nH *= pow(M,nQ*yQ);
 			if(nH>16)			// Defines an upper limit for the parameter value
 			{
 				nH=16;
@@ -234,7 +237,7 @@ class GeneNetwork
 		}
 		if(PAR_E.KD)
 		{
-			KD *= pow(M,ratioQ*sin(phi1Q)*sin(phi2Q)*cos(phi3Q));
+			KD *= pow(M,nQ*zQ);
 			if(KD>120)			// Defines an upper limit for the parameter value
 			{
 				KD = 120;
@@ -246,7 +249,7 @@ class GeneNetwork
 		}
 		if(PAR_E.a)
 		{
-			a *= pow(M,ratioQ*sin(phi1Q)*sin(phi2Q)*sin(phi3Q));
+			a *= pow(M,nQ*wQ);
 			if(a>1)			// Defines an upper limit for the parameter value
 			{
 				a = 1;
